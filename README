@@ -1,6 +1,5 @@
 Use Safari/Webkit to test.
 
 
-Dependent libraries:
-* xui - http://xuijs.com/
+Dependent libraries (all included already):
 * mustache - http://mustache.github.com/
