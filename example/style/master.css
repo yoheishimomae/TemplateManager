@@ -1,0 +1,219 @@
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-touch-callout: none; /* prevent callout to copy image, etc when tap to hold */
+	-webkit-text-size-adjust: none; /* prevent webkit from resizing text to fit */
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+[data-ev] {
+	cursor: pointer;
+}
+
+
+body, html {
+	width:100%; 
+	overflow: auto;
+	overflow-x: hidden;
+	color: #444;
+	background: #fff;
+}
+
+#wrap {
+	overflow: hidden;
+	width:100%;
+	height: 100%;
+}
+
+/* for desktop only */ 
+#wrap {
+	border: 4px solid #151b24;
+	max-width: 500px;
+	min-height: 500px;
+	margin: 60px auto ;
+	-webkit-border-radius: 4px;
+	-webkit-box-shadow: 0px 2px 8px #555;
+}
+
+/*---------------------------------------------------
+	Font
+---------------------------------------------------*/
+
+body {
+	font-family: 'HelveticaNeue-Light', Helvetica, Arial, sans-serif;
+	font-size: 14px;
+	letter-spacing: 0.1em;
+}
+
+h1 {
+	font-family: 'HelveticaNeue-Light', Helvetica, Arial, sans-serif;
+	font-size: 22px;
+	font-weight: normal;
+	letter-spacing: 0.05em;
+}
+
+button {
+	font-size: 12px;
+	letter-spacing: 0.1em;
+	font-family: 'HelveticaNeue-Medium', Helvetica, Arial, sans-serif;
+}
+
+
+/*---------------------------------------------------
+	Generic
+---------------------------------------------------*/
+
+a {
+}
+
+p {
+	line-height: 1.5em;
+}
+
+p + p {
+	margin-top: 1.2em;
+}
+
+
+/*---------------------------------------------------
+	Layout
+---------------------------------------------------*/
+
+.right, .left, .top {
+	position: absolute;
+	top: 0;
+}
+
+.left {
+	left: 0;
+}
+
+.right {
+	right: 0;
+}
+
+
+/*---------------------------------------------------
+	UI - General
+---------------------------------------------------*/
+
+@-webkit-keyframes spinner {
+	from {-webkit-transform: rotate(0deg);}
+	to {-webkit-transform: rotate(360deg);}
+}
+
+.spinner {
+	background: url(img/spinner.png);
+	width: 34px;
+	height: 34px;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-name: spinner;	
+}
+
+.spinner.dark {
+	background-image: url(img/spinner_dark.png);
+}
+
+/*---------------------------------------------------
+	UI - Buttons
+---------------------------------------------------*/
+
+button {
+	height: 42px;
+	padding: 0 8px;
+	color: #151b24;
+	line-height: 42px;
+	text-shadow: #fff 0px 1px 1px;
+	-webkit-border-radius: 16px;
+	border: 1px solid #31363d;
+	background: -webkit-gradient(linear, left top, left bottom, from(#cbcfd4), to(#939ba6));
+	-webkit-background-clip: padding-box;
+}
+
+button:active {
+	background: -webkit-gradient(linear, left top, left bottom, from(#b3b6ba), to(#7d838c));
+}
+
+/*---------------------------------------------------
+	UI - Header
+---------------------------------------------------*/
+
+.toolbar {
+	height: 56px;
+	line-height: 56px;
+	color: #fff;
+	text-shadow: #151b24 0px -1px 1px;
+	position: relative;
+	text-align: center;
+	background: -webkit-gradient(linear, left top, left bottom, from(#626972), to(#35383d));
+}
+
+.toolbar h1 {
+	padding: 0 90px;
+	overflow: hidden;
+	margin: 0 auto;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.toolbar button {
+	width: 70px;
+	padding: 0;
+	-webkit-box-shadow: 0px 1px 0px #939ba6;
+	margin: 6px;
+}
+
+/*---------------------------------------------------
+	UI - Generic View
+---------------------------------------------------*/
+
+.content.text {
+	padding: 24px 24px;
+}
+
+/*---------------------------------------------------
+	UI - List
+---------------------------------------------------*/
+
+.list li {
+	padding: 24px;
+	padding-right: 48px;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
+	border-bottom: #999 1px solid;
+	position: relative;
+	list-style: none;
+}
+
+.list li:active {
+	background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ccc));
+}
+
+.list li:after {
+	font-weight: bold;
+	font-size: 10px;
+	height: 16px;
+	padding: 0 5px;
+	line-height: 14px;
+	text-align: center;
+	-webkit-border-radius: 8px;
+	content: ">";
+	position: absolute;
+	right: 10px;
+	background: #bbb;
+	color: #fff;
+}
+
+.list li.has-spinner:after {
+	background: none;
+	content: "";
+}
+
+.list li .spinner {
+	position: absolute;
+	right: 4px;
+	top: 50%;
+	margin-top: -16px;
+	background-image: url(img/spinner_dark.png);
+}

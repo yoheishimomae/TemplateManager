@@ -1,0 +1,9 @@
+#wrap {
+	border: none;
+	max-width: inherit;
+	max-height: inherit;
+	min-height: inherit;
+	margin: inherit;
+	-webkit-border-radius: 0px;
+	-webkit-box-shadow: none;
+}
