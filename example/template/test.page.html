@@ -1,3 +1,5 @@
 <div class="content text">
-	This is a test page
+	<p>Your page depth is {{depth}}.</p>
+	<br/>
+	<button onclick="template.goto('testpage', {data:{depth:template.depth}})">Go to Another Test Page</button>
 </div>

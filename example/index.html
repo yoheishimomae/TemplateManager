@@ -7,11 +7,31 @@
 <meta name = "format-detection" content = "telephone=no">
 <title>SimpleUI</title>
 <link rel="stylesheet" href="style/master.css" type="text/css"/>
-<link rel="stylesheet" media="only screen and (max-device-width:1024px)" type="text/css" href="style/mobile.css"/>
+<link rel="stylesheet" media="only screen and (min-device-width:1100px)" type="text/css" href="style/desktop.css"/>
 </head>
 <body>
 	<div id="wrap"></div>
 	<script type="text/javascript" src="js/Core.js"></script>
-	<script type="text/javascript" src="js/App.js"></script>
+	<script type="text/javascript">
+	
+		var sitemap = {
+			home:{
+				template:['home.html'],
+				js:['page/home.js']
+			},
+
+			testpage:{
+				template:['header.html', 'test.page.html'],
+				js:['page/test.js']
+			}
+		};
+
+		var template = new TemplateManager(sitemap);
+
+		window.onload = function() {
+			template.goto('home');
+		}
+		
+	</script>
 </body>
 </html>

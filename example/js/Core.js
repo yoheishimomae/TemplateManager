@@ -45,6 +45,10 @@ function TemplateManager(map) {
 	this.map = map;
 	this.counter = 0;	
 	this.templates = {};
+	this.jsFolder = 'js/';
+	this.cache = [];
+	this.depth = 0;
+	this.dynamicPath = '?v=' + new Date().valueOf(); // prevents file cache
 	
 	var self = this;
 	if (typeof XMLHttpRequest == "undefined")
@@ -75,33 +79,90 @@ function TemplateManager(map) {
 		req.send();
 	}
 	
-	this.goto = function(uid, data) {
-		var page = map[uid], template = page.template, html = [];
-		function onLoad() {
-			for (var i = 0; i < template.length; i++) {
+	this.goto = function(uid, opts) {
+		var page = map[uid], 
+		template = page.template, 
+		js = page.js, 
+		html = [],
+		data = null,
+		backwards = false,
+		i = 0;
+		self.cache[this.depth] = {uid:uid, opts:opts};
+		self.depth++;
+		
+		console.log(uid, opts)
+		
+		function onJSLoad() {	
+			self.loadMultiple(template, onTemplateLoad, true);
+		}
+		
+		function onTemplateLoad() {
+			for (i = 0; i < template.length; i++) {
+				if (opts && opts.data) data = opts.data;
 				html.push(self.create(template[i], data));
 			}
-			var slide = new Slide();
-			slide.run(html.join(''), document.getElementById('wrap'))
+			if (opts && opts.back) backwards = true;
+			Slide.run(html.join(''), document.getElementById('wrap'), backwards);
 		}
-		self.loadMultiple(template, onLoad, true);
+		self.loadJS(js, onJSLoad)
 	}
 	
+	this.back = function() {
+		var lastItem = self.cache[self.depth-2], opts = null;
+		if (lastItem) {
+			opts = lastItem.opts || {};
+			opts.back = true;
+			self.depth-=2;
+			
+			self.goto(lastItem.uid, opts)
+		}
+	},
+	
+	
+	this.loadJS=function(js, cb) {
+		if (!js || js.length == 0) cb.call(null);
+		var i = 0, 
+		jsPath = '',
+		item = null,
+		script = null,
+		head = document.getElementsByTagName('HEAD').item(0);
+		
+		for (i = 0; i < head.childNodes.length; i++) {
+			item = head.childNodes[i];
+			if (item.getAttribute && item.getAttribute('data-temporary')) {
+				head.removeChild(item);
+			}
+		}
+		
+		for (i = 0; i < js.length; i++) {
+			jsPath = js[i];
+			script= document.createElement("script");
+			script.type = "text/javascript";
+			script.src = self.jsFolder + jsPath + self.dynamicPath;
+			//script['data-temporary'] = true;
+			script.setAttribute('data-temporary', true);
+			head.appendChild( script);
+		}
+		
+		cb.call(null);
+	};
+	
 	this.loadMultiple=function(templPaths, cb, assignkey) {
+		var uid, key, url;
 		self.called = false;
 		if (cb) self.onTemplateLoadComplete = cb;
 	
-		for (var key in templPaths) {
+		for (key in templPaths) {
 			self.counter++;
 		}
 			
-		for (var key in templPaths) {
-			var uid = assignkey ? templPaths[key] : key;
+		for (key in templPaths) {
+			uid = assignkey ? templPaths[key] : key;
 			if (self.templates[uid]) {
 				self.counter--;
 			}
 			else {
-				var url = templPaths[key];
+				url = templPaths[key];
 				self.loadTemplate(uid, url);
 			}
 		}
@@ -112,7 +173,7 @@ function TemplateManager(map) {
 	};
 
 	this.loadTemplate=function(key, url) {
-		self.localXhr(self.templatePrefix + url, function(r) {
+		self.localXhr(self.templatePrefix + url + self.dynamicPath, function(r) {
 			self.templates[key] = this.responseText;
 			self.onTemplateLoad();
 		});
@@ -136,6 +197,7 @@ function TemplateManager(map) {
 		return Mustache.to_html(self.templates[key], data);
 	};
 	
+	
 	this.loopCreate=function(key, data, len) {
 		var html = [];
 		len = len || data.length;
@@ -153,43 +215,42 @@ function TemplateManager(map) {
 
 var slideLocked = false;
 
-function Slide(backward) {
-	this.backward = backward;
-}
+var Slide = {
+	
+	run:function(view, parent, backwards) {
 
-Slide.prototype.run = function(view, parent) {
+		if (!parent || parent.childNodes.length == 0) {
+			var fade = new Fade();
+			fade.run(view, parent);
 	
-	if (!parent || parent.childNodes.length == 0) {
-		var fade = new Fade();
-		fade.run(view, parent);
-		
-		return;
+			return;
+		}
+
+		var back = backwards;
+		var oldView = parent.childNodes[0];
+		var w = oldView.offsetWidth;
+
+		var containerStyle = 'width:' + w*2 + 'px;'; 	
+		var style = '-webkit-transition: -webkit-transform 0.2s linear; float:left; width:' + w + 'px;';
+		var view1 = parent.innerHTML;
+		var view2 = view;
+		var x = back ? 0 : -w;
+
+		if (back) {		
+			view1 = view;
+			view2 = parent.innerHTML;
+			style += '-webkit-transform: translate3d(' + -w + 'px, 0, 0);';
+		}
+
+		parent.innerHTML = '<div style=' + containerStyle + '><div id="slide1" style="' + style + '">' + view1 + '</div>' + '<div id="slide2" style="' + style + '">' + view2 + '</div></div>';
+
+		slide1.style['-webkit-transform'] = 'translate3d(' + x + 'px, 0, 0)';
+		slide2.style['-webkit-transform'] = 'translate3d(' + x + 'px, 0, 0)';
+
+		setTimeout(function() {
+			parent.innerHTML = view;
+		}, 300);
 	}
-	
-	var back = this.backward;
-	var oldView = parent.childNodes[0];
-	var w = oldView.offsetWidth;
-	
-	var containerStyle = 'width:' + w*2 + 'px;'; 	
-	var style = '-webkit-transition: -webkit-transform 0.2s linear; float:left; width:' + w + 'px;';
-	var view1 = parent.innerHTML;
-	var view2 = view;
-	var x = back ? 0 : -w;
-	
-	if (back) {		
-		view1 = view;
-		view2 = parent.innerHTML;
-		style += '-webkit-transform: translate3d(' + -w + 'px, 0, 0);';
-	}
-	
-	parent.innerHTML = '<div style=' + containerStyle + '><div id="slide1" style="' + style + '">' + view1 + '</div>' + '<div id="slide2" style="' + style + '">' + view2 + '</div></div>';
-	
-	slide1.style['-webkit-transform'] = 'translate3d(' + x + 'px, 0, 0)';
-	slide2.style['-webkit-transform'] = 'translate3d(' + x + 'px, 0, 0)';
-	
-	setTimeout(function() {
-		parent.innerHTML = view;
-	}, 300);
 };
 
 
