@@ -107,12 +107,22 @@ function TemplateManager(map) {
 		self.loadJS(js, onJSLoad)
 	}
 	
-	this.back = function() {
-		var lastItem = self.cache[self.depth-2], opts = null;
+	this.back = function(index) {
+		
+		var curindex = index != null ? index : self.depth-2;
+		var lastItem = self.cache[curindex], opts = null;
 		if (lastItem) {
 			opts = lastItem.opts || {};
 			opts.back = true;
-			self.depth-=2;
+			if (index != null) {
+				self.depth = index;
+				for (var i = index+1; i < self.cache.length; i++) {
+					self.cache[i] = null;
+				}
+			}
+			else {
+				self.depth-=2;
+			}
 			
 			self.goto(lastItem.uid, opts)
 		}
@@ -120,7 +130,10 @@ function TemplateManager(map) {
 	
 	
 	this.loadJS=function(js, cb) {
-		if (!js || js.length == 0) cb.call(null);
+		if (!js || js==undefined || js.length == 0) {
+			cb.call(null);
+			return;
+		}
 		var i = 0, 
 		jsPath = '',
 		item = null,

@@ -11,18 +11,19 @@
 </head>
 <body>
 	<div id="wrap"></div>
-	<script type="text/javascript" src="js/Core.js"></script>
+	<script type="text/javascript" src="js/core.js"></script>
 	<script type="text/javascript">
 	
 		var sitemap = {
 			home:{
-				template:['home.html'],
-				js:['page/home.js']
+				template:['header-home.html','body-home.html']
+				// js:['page/home.js']
 			},
-
+			about:{
+				template:['header-general.html', 'body-about.html']
+			},
 			testpage:{
-				template:['header.html', 'test.page.html'],
-				js:['page/test.js']
+				template:['header-general.html', 'body-list.html']
 			}
 		};
 

@@ -31,21 +31,21 @@ body, html {
 
 body {
 	font-family: 'HelveticaNeue-Light', Helvetica, Arial, sans-serif;
+	font-weight: 300;
 	font-size: 14px;
-	letter-spacing: 0.1em;
+}
+
+h1, label, button {
+	font-family: 'HelveticaNeue-Medium', Helvetica, Arial, sans-serif;
+	font-weight: 500;
 }
 
 h1 {
-	font-family: 'HelveticaNeue-Light', Helvetica, Arial, sans-serif;
 	font-size: 22px;
 	font-weight: normal;
-	letter-spacing: 0.05em;
 }
 
 button {
-	font-size: 12px;
-	letter-spacing: 0.1em;
-	font-family: 'HelveticaNeue-Medium', Helvetica, Arial, sans-serif;
 }
 
 
@@ -113,13 +113,13 @@ p + p {
 button {
 	height: 42px;
 	padding: 0 8px;
-	color: #151b24;
 	line-height: 42px;
 	text-shadow: #fff 0px 1px 1px;
-	-webkit-border-radius: 16px;
+	color: #444;
 	border: 1px solid #31363d;
 	background: -webkit-gradient(linear, left top, left bottom, from(#cbcfd4), to(#939ba6));
 	-webkit-background-clip: padding-box;
+	-webkit-border-radius: 8px;
 }
 
 button:active {
@@ -130,17 +130,27 @@ button:active {
 	UI - Header
 ---------------------------------------------------*/
 
-.toolbar {
-	height: 56px;
-	line-height: 56px;
-	color: #fff;
-	text-shadow: #151b24 0px -1px 1px;
-	position: relative;
-	text-align: center;
-	background: -webkit-gradient(linear, left top, left bottom, from(#626972), to(#35383d));
+header, header button {
+	height: 48px;
+	line-height: 48px;
 }
 
-.toolbar h1 {
+header button, header label {
+	font-size: 13px;
+}
+
+header {
+	text-shadow: #fff 0px 1px 1px;
+	position: relative;
+	text-align: center;
+	border-bottom: 1px solid #707070;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ebebeb), to(#c1c1c1));
+	-webkit-box-shadow: 0px 1px 5px rgba(0,0,0,0.3);
+	z-index:99;
+}
+
+/* Title */
+header label {
 	padding: 0 90px;
 	overflow: hidden;
 	margin: 0 auto;
@@ -148,18 +158,35 @@ button:active {
 	white-space: nowrap;
 }
 
-.toolbar button {
-	width: 70px;
-	padding: 0;
-	-webkit-box-shadow: 0px 1px 0px #939ba6;
-	margin: 6px;
+/* Left Button */
+header button {
+	width: 72px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: transparent;
+	border: none;
+	border-right: 1px solid #707070;
+	-webkit-border-radius: 0;
+}
+
+/* Right Button */
+header button:nth-of-type(2) {
+	left: auto;
+	right: 0;
+	border: none;
+	border-left: 1px solid #707070;
+}
+
+header button:active {
+	background: rgba(0,0,0,0.1);
 }
 
 /*---------------------------------------------------
 	UI - Generic View
 ---------------------------------------------------*/
 
-.content.text {
+article {
 	padding: 24px 24px;
 }
 
@@ -168,42 +195,39 @@ button:active {
 ---------------------------------------------------*/
 
 .list li {
-	padding: 24px;
+	padding: 18px 16px;
 	padding-right: 48px;
-	background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ddd));
-	border-bottom: #999 1px solid;
+	background: #fff;
+	border-bottom: #cbcbcb 1px solid;
 	position: relative;
 	list-style: none;
 }
 
 .list li:active {
-	background: -webkit-gradient(linear, left top, left bottom, from(#eee), to(#ccc));
+	background: #eee;
 }
 
 .list li:after {
-	font-weight: bold;
-	font-size: 10px;
-	height: 16px;
-	padding: 0 5px;
-	line-height: 14px;
+	font-size: 24px;
+	line-height: 48px;
+	width: 24px;
 	text-align: center;
-	-webkit-border-radius: 8px;
-	content: ">";
+	content: "›";
 	position: absolute;
-	right: 10px;
-	background: #bbb;
-	color: #fff;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	background: rgba(0,0,0,0.05);
 }
 
-.list li.has-spinner:after {
-	background: none;
-	content: "";
-}
+/*---------------------------------------------------
+	UI - List
+---------------------------------------------------*/
 
-.list li .spinner {
-	position: absolute;
-	right: 4px;
-	top: 50%;
-	margin-top: -16px;
-	background-image: url(img/spinner_dark.png);
+.info {
+	background: #eee;
+	padding: 8px;
+	text-align: center;
+	font-size: 12px;
+	-webkit-box-shadow: inset 0px -4px 4px rgba(0,0,0,0.07);
 }
